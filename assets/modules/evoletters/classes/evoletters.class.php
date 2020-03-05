@@ -277,6 +277,50 @@
 		}
 		
 		/*
+		* Рассылка по cron'у
+		*/
+		public function distributionCron($id_letter)
+		{			
+		
+			$res = $this->modx->db->query('Select subject,content,method from '.$this->tbl_el_letters.' where `id`='.$id_letter);
+			$row = $this->modx->db->getRow($res);
+			extract($row);				
+			$this->modx->logEvent(0, 1, '<p>Рассылка письма <b>'.$name.'</b></p>
+				<p>Начало <b>'.date("d-m-Y H:i:s",time()).'</b></p>				
+				<p>Отправлено:</p>', 
+				'evoLetters');
+				$_SESSION['write_log'] = $this->modx->db->getInsertId();
+				$this->modx->invokeEvent('OnBeforeDistribution',$data);	
+						
+			$ct = $this->modx->db->getValue('Select count(*) from '.$this->tbl_el_subscriber.' where confirmed=1');
+			$res = $this->modx->db->query('Select * from '.$this->tbl_el_subscriber.' where confirmed=1');
+			while ($user = $this->modx->db->getRow($res))
+			{
+				$fields = array();
+				//Добавляем [+content+],[+unscribe_link+],[+subscribe_link+]
+				foreach($this->createLetter($id_letter,$user['id']) as $k=>$v) $fields[$k]=$v;
+				//Добавляем поля пользователя
+				
+				foreach($user as $k=>$v) $fields[$k]=$v;
+				$this->modx->runSnippet($method,$fields);
+				
+				//Пишем в лог юзверя									
+				$this->modx->db->query('UPDATE '.$this->modx->getFullTableName('event_log').' SET `description`=CONCAT(description,"","'.$user['email'].'<br>") WHERE `id`='.$_SESSION['write_log']);					
+				//Увеличиваем счетчик
+				$this->modx->db->query('Update '.$this->tbl_el_subscriber.' set 
+				`count` = (`count`+1) where id='.$user['id']);					
+			}
+			
+			$this->modx->db->query('UPDATE '.$this->modx->getFullTableName('event_log').' SET `description`=CONCAT(description,"<br>","<p>Завершено в '.time().'</p>") WHERE `id`='.$_SESSION['write_log']);
+			unset($_SESSION['write_log']);					
+			unset($_SESSION['step_distribution']);	
+			$this->modx->db->query('Update '.$this->tbl_el_letters.' set 
+			`count` = (`count`+1) where id='.$id_letter);				
+			$this->modx->invokeEvent('OnAfterDistribution',$data);
+			return "It's all ok!";
+		}
+		
+		/*
 			* Из шаблона делаем письмо
 			* lid - id письма
 			* uid - id юзверя
