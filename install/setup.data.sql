@@ -57,11 +57,11 @@ INSERT INTO `{PREFIX}el_templates` (`id`, `name`, `subject`, `template`, `count`
 (2, 'Пустой шаблон', '', '[+content+]    ', 0);
 
 INSERT INTO `{PREFIX}system_eventnames` (`name`, `service`, `groupname`) VALUES
-(1102, 'OnELUserSubscription', 6, 'evoLetters'),
-(1102, 'OnELConfirmingUsersSubscription', 6, 'evoLetters'),
-(1102, 'OnELConfirmingUsersUnsubscribe', 6, 'evoLetters'),
-(1102, 'OnBeforeDistribution', 6, 'evoLetters'),
-(1102, 'OnAfterDistribution', 6, 'evoLetters');
+('OnELUserSubscription', 6, 'evoLetters'),
+('OnELConfirmingUsersSubscription', 6, 'evoLetters'),
+('OnELConfirmingUsersUnsubscribe', 6, 'evoLetters'),
+('OnBeforeDistribution', 6, 'evoLetters'),
+('OnAfterDistribution', 6, 'evoLetters');
 
 
 ALTER TABLE `{PREFIX}el_letters` ADD PRIMARY KEY (`id`);
