@@ -312,8 +312,7 @@
 			}
 			
 			$this->modx->db->query('UPDATE '.$this->modx->getFullTableName('event_log').' SET `description`=CONCAT(description,"<br>","<p>Завершено в '.time().'</p>") WHERE `id`='.$_SESSION['write_log']);
-			unset($_SESSION['write_log']);					
-			unset($_SESSION['step_distribution']);	
+			
 			$this->modx->db->query('Update '.$this->tbl_el_letters.' set 
 			`count` = (`count`+1) where id='.$id_letter);				
 			$this->modx->invokeEvent('OnAfterDistribution',$data);
