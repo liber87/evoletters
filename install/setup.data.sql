@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}el_letters` (
   `count` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
-INSERT INTO `{PREFIX}_el_letters` (`id`, `name`, `subject`, `content`, `tpl`, `method`, `count`) VALUES
+INSERT INTO `{PREFIX}el_letters` (`id`, `name`, `subject`, `content`, `tpl`, `method`, `count`) VALUES
 (1, 'Подтверждение регистрации', 'Подтверждение регистрации', '<p>Проверка работы модуля отправки с использованием метода SMS2.</p>', 1, 'modxmail', 0),
 (2, 'Валидация писем', '', '', 2, 'emailverification', 0);
 
