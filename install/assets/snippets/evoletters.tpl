@@ -31,7 +31,8 @@ $out='';
 if (isset($_POST['subscribe_email']))
 {
 	$email = $modx->db->escape($_POST['subscribe_email']);
-	if (!preg_match("/^(?:[a-z0-9]+(?:[-_.]?[a-z0-9]+)?@[a-z0-9_.-]+(?:\.?[a-z0-9]+)?\.[a-z]{2,5})$/i", $email)) $out=$wrong_email;
+	if (!preg_match("/^(?:[a-z0-9]+(?:[-_.]?[a-z0-9]+)?@[a-z0-9_.-]+(?:\.?[a-z0-9]+)?\.[a-z]{2,5})$/i", $email))
+		$el->tpl->parseChunk($out=$wrong_email);
 	else
 	{		
 		$count = $modx->db->getValue('Select count(*) from '.$el->tbl_el_subscriber.' where email="'.$email.'"');
