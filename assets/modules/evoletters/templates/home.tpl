@@ -1,5 +1,6 @@
 <script>
 	table = 'el_subscriber';
+	groups = JSON.parse('[+groups+]');	
 </script>
 <div id="tab-page1" class="tab-page" style="display:block;">	
 	<div style="clear:both"></div>	
@@ -16,11 +17,12 @@
 		<thead>
 			<tr>
 				<th field="email"  width="25%">Email</th>   				
-				<th field="name" width="25%">Имя</th>										
-				<th field="phone" width="21%">Телефон</th>						
-				<th field="count" align="center" width="8%" sortable="true">Рассылок</th>   				
-				<th field="confirmed" formatter="confirmed" align="center" width="8%"> Подтвержден</th> 
-				<th field="valid" formatter="valid" align="center" width="12%"> Верифицирован</th> 
+				<th field="name" width="25%">Имя</th>
+				<th field="phone" width="10%">Телефон</th>						
+				<th field="groups" width="21%" formatter="get_groups">Группы</th>						
+				<th field="count" align="center" width="6%" sortable="true">Рассылок</th>   				
+				<th field="confirmed" formatter="confirmed" align="center" width="6%"> Подтвержден</th> 
+				<th field="valid" formatter="valid" align="center" width="6%"> Верифицирован</th> 
 			</tr>
 		</thead>
 	</table>
@@ -33,7 +35,7 @@
 	<script type="text/javascript">
         $(function(){
             $('#dg').datagrid({
-                view: detailview,
+                view: detailview,				
                 detailFormatter:function(index,row){
                     return '<div class="ddv" style="padding:5px 0"></div>';
 				},
@@ -49,8 +51,9 @@
 					});
                     $('#dg').datagrid('fixDetailRowHeight',index);
 				}
-			});
+			});	
 		});
+		
 	</script>
 </div>
 <div id="dlg" class="easyui-dialog" style="width:420px;height:300px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
@@ -66,6 +69,8 @@
 		<div style="margin-bottom:20px">
 			<input class="easyui-textbox" name="phone" style="width:100%" data-options="label:'Телефон:'">
 		</div>
+		<p>Группы:</p>
+		<div id="groups_checkbox"></div>
 		<div style="margin-bottom:20px">
 			<textarea class="easyui-textbox" name="comment" style="width:100%"></textarea>
 		</div>
