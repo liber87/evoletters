@@ -165,6 +165,7 @@
 		*/
 		public function crud($act,$data)
 		{		
+			
 			$table = $this->modx->getFullTableName($data['table']);
 			
 			switch ($act)
@@ -177,11 +178,12 @@
 					$field = $row['Field'];
 					if (($data[$field]) && ($field!='id')) 
 					{
-						if (is_array($data[$field])) $data[$field] = implode(',',$data[$field]);
+						if (is_array($data[$field])) $fields[$field] = implode(',',$data[$field]);
 						else $fields[$field] = $data[$field];
 					}
 					if ($field=='hash') $fields['hash']=md5(time());
-				}				
+				}		
+								
 				$result = $this->modx->db->insert($fields,$table);														
 				break;
 				
