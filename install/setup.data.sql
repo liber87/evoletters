@@ -65,6 +65,15 @@ INSERT INTO `{PREFIX}system_eventnames` (`name`, `service`, `groupname`) VALUES
 ('OnBeforeDistribution', 6, 'evoLetters'),
 ('OnAfterDistribution', 6, 'evoLetters');
 
+CREATE TABLE IF NOT EXISTS `{PREFIX}el_groups` (
+  `id` int(11) NOT NULL,
+  `name` varchar(128) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `{PREFIX}el_groups` (`id`, `name`) VALUES
+(1, 'Группа по умолчанию');
+
+ALTER TABLE `{PREFIX}el_groups`  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `{PREFIX}el_letters` ADD PRIMARY KEY (`id`);
 
@@ -79,3 +88,5 @@ ALTER TABLE `{PREFIX}el_letters` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUT
 ALTER TABLE `{PREFIX}el_methods` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 
 ALTER TABLE `{PREFIX}el_subscriber` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=292;
+
+ALTER TABLE `{PREFIX}el_groups` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
