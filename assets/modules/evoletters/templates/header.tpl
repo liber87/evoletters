@@ -31,5 +31,6 @@
 					<h2 class="tab [+selected.templates+]"><a href="[+moduleurl+]tab=templates"><span>Шаблоны</span></a></h2>
 					<h2 class="tab [+selected.letters+]"><a href="[+moduleurl+]tab=letters"><span>Письма</span></a></h2>					
 					<h2 class="tab [+selected.el_methods+]"><a href="[+moduleurl+]tab=methods"><span>Методы</span></a></h2>					
+					<h2 class="tab [+selected.groups+]"><a href="[+moduleurl+]tab=groups"><span>Группы</span></a></h2>
 					[+edit_button+]					
 				</div>     				
