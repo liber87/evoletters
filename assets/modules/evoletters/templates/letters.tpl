@@ -1,6 +1,7 @@
 <script>
 	table = 'el_letters';
 	templates = JSON.parse('[+templates_json+]');	
+	groups = JSON.parse('[+groups+]');	
 </script>
 <div id="tab-page1" class="tab-page" style="display:block;">	
 	<div style="clear:both"></div>	
@@ -17,8 +18,9 @@
 				<th field="name" width="20%">Название</th>
 				<th field="subject"  width="20%">Тема</th>
 				<th field="tpl" formatter="get_template" width="20%">Шаблон</th>
-				<th field="method" width="20%">Метод</th>
-				<th field="count"  width="20%">Рассылок</th>    				
+				<th field="groups" formatter="get_groups" width="15%">Группы</th>
+				<th field="method" width="15%">Метод</th>
+				<th field="count"  width="10%">Рассылок</th>    				
 			</tr>
 		</thead>
 	</table>
