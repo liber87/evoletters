@@ -56,7 +56,7 @@
 		
 	</script>
 </div>
-<div id="dlg" class="easyui-dialog" style="width:420px;height:300px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
+<div id="dlg" class="easyui-dialog" style="width:420px;height:400px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
 	
 	<form id="ff" method="post" novalidate>		
 		<input type="hidden" name="id" value="">
@@ -71,8 +71,9 @@
 		</div>
 		<p>Группы:</p>
 		<div id="groups_checkbox"></div>
+		<p>Комментарий:</p>
 		<div style="margin-bottom:20px">
-			<textarea class="easyui-textbox" name="comment" style="width:100%"></textarea>
+			<textarea class="easyui-textbox" name="comment" style="width:100%; height:150px;"></textarea>
 		</div>
 		
 	</form>
