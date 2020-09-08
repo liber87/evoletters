@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}el_letters` (
   `content` text NOT NULL,
   `tpl` int(11) NOT NULL,
   `method` text NOT NULL,
+  `groups` VARCHAR(128) NOT NULL,
   `count` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
@@ -35,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}el_subscriber` (
   `name` varchar(128) NOT NULL,
   `email` varchar(128) NOT NULL,
   `phone` varchar(12) DEFAULT NULL,
+  `groups` VARCHAR(128) NOT NULL,
   `count` int(11) NOT NULL DEFAULT '0',
   `hash` varchar(128) NOT NULL DEFAULT '',
   `confirmed` tinyint(4) NOT NULL DEFAULT '0',
