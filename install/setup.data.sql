@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}el_groups` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `{PREFIX}el_groups` (`id`, `name`) VALUES
-(1, 'Группа по умолчанию');
+(1, 'Тестовая группа');
 
 ALTER TABLE `{PREFIX}el_groups`  ADD PRIMARY KEY (`id`);
 
