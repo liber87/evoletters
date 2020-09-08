@@ -21,6 +21,7 @@
 			$this->tbl_el_templates = $modx->getFullTableName('el_templates');
 			$this->tbl_el_letters = $modx->getFullTableName('el_letters');			
 			$this->tbl_el_methods = $this->modx->getFullTableName('el_methods');
+			$this->tbl_el_groups = $this->modx->getFullTableName('el_groups');
 			$this->tbl_site_content = $this->modx->getFullTableName('site_content');
 		}
 		/*
@@ -99,7 +100,7 @@
 			$run = '
 			<script type="text/javascript">
 			jQuery(document).ready(function() {			
-			tinymce.init({"selector":"#editor"});
+				setTimeout((arg) => {tinymce.init({"selector":"#editor"})},500);
 			});
 			</script>';
 			
@@ -177,7 +178,7 @@
 					if (($data[$field]) && ($field!='id')) 
 					{
 						if (is_array($data[$field])) $data[$field] = implode(',',$data[$field]);
-						$fields[$field] = $data[$field];
+						else $fields[$field] = $data[$field];
 					}
 					if ($field=='hash') $fields['hash']=md5(time());
 				}				
@@ -191,12 +192,14 @@
 					$fieldlist[] = $key;
 				}
 				$fields = array();
+								
 				foreach($data as $key => $val){
 					if(in_array($key,$fieldlist)) {
-						if (is_array($val)) $fields[$field] = implode(',',$val);						
-						$fields[$key] = $val;
+						if (is_array($val)) $fields[$key] = implode(',',$val);						
+						else $fields[$key] = $val;
 					}
-				}							
+				}						
+				
 				$result = $this->modx->db->update( $fields, $table, 'id = "' . $data['id'] . '"' );				
 				break;
 				
@@ -220,7 +223,7 @@
 			if (is_array($data)) extract($data);
 			
 			if (!$offset) $offset = 0;
-			$res = $this->modx->db->query('Select subject,content,method from '.$this->tbl_el_letters.' where `id`='.$id_letter);
+			$res = $this->modx->db->query('Select subject,content,method,groups from '.$this->tbl_el_letters.' where `id`='.$id_letter);
 			$row = $this->modx->db->getRow($res);
 			extract($row);				
 			if (!isset($_SESSION['step_distribution'])) $_SESSION['step_distribution'] = 0;
@@ -228,8 +231,7 @@
 			
 			
 			//Начинаем лог
-			if (!isset($_SESSION['write_log']))
-			{
+			if (!isset($_SESSION['write_log'])){
 				$this->modx->logEvent(0, 1, '<p>Рассылка письма <b>'.$name.'</b></p>
 				<p>Начало <b>'.date("d-m-Y H:i:s",time()).'</b></p>				
 				<p>Отправлено:</p>', 
@@ -239,24 +241,29 @@
 				
 			}
 			
-			$ct = $this->modx->db->getValue('Select count(*) from '.$this->tbl_el_subscriber.' where confirmed=1');
-			$res = $this->modx->db->query('Select * from '.$this->tbl_el_subscriber.' where confirmed=1 limit '.$offset.',1');
+			if ($groups){
+				$wheres = array();
+				$gp = explode(',',$groups);
+				foreach($gp as $g){
+					$wheres[] = '((`groups`='.$g.') or (`groups` like "'.$g.',%") or (`groups` like "%,'.$g.'") or (`groups` like "%,'.$g.',%"))';
+				}
+				$where = implode(' or ',$wheres).' and ';
+			}
+			
+			$ct = $this->modx->db->getValue('Select count(*) from '.$this->tbl_el_subscriber.' where '.$where.' confirmed=1');
+			$res = $this->modx->db->query('Select * from '.$this->tbl_el_subscriber.' where '.$where.' confirmed=1 limit '.$offset.',1');
 			$user = $this->modx->db->getRow($res);
 			
 			
-			if ($ct==$offset)
-			{					
+			if ($ct==$offset){					
 				$status = 'success';
 				$this->modx->db->query('UPDATE '.$this->modx->getFullTableName('event_log').' SET `description`=CONCAT(description,"<br>","<p>Завершено в '.time().'</p>") WHERE `id`='.$_SESSION['write_log']);
 				unset($_SESSION['write_log']);					
 				unset($_SESSION['step_distribution']);	
 				$this->modx->db->query('Update '.$this->tbl_el_letters.' set 
 				`count` = (`count`+1) where id='.$id_letter);				
-				$this->modx->invokeEvent('OnAfterDistribution',$data);
-				
-			}
-			else 
-			{
+				$this->modx->invokeEvent('OnAfterDistribution',$data);				
+			}else {
 				$status = 'continue';
 				$_SESSION['step_distribution'] = $offset+1;
 				$fields = array();
@@ -374,7 +381,7 @@
 		*/
 		public function setDataTemplate($data)
 		{
-			
+			if (!isset($data['groups'])) $data['groups']='';
 			$table = $this->modx->getFullTableName($data['table']);
 			$fieldSql = $this->modx->db->query("SHOW COLUMNS from ".$table);
 			while($row = $this->modx->db->getRow( $fieldSql ))
@@ -382,9 +389,11 @@
 				$fieldlist[] = 	$row['Field'];
 			}	
 			$fields = array();
+			
 			foreach($data as $key => $val){
-				if(in_array($key,$fieldlist)) {
-					$fields[$key] = $this->modx->db->escape($this->modx->removeSanitizeSeed($val));
+				if(in_array($key,$fieldlist)) {					
+					if (is_array($val)) $fields[$key] = implode(',',$val);						
+					else $fields[$key] = $this->modx->db->escape($this->modx->removeSanitizeSeed($val));
 				}
 			}					
 			if ($data['id'])
