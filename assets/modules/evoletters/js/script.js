@@ -20,8 +20,29 @@ document.addEventListener('DOMContentLoaded', function(){
 	$(document).on('change','.confirmed',function(){		
 		$.post(moduleurl+'crud=update&table='+table, { id: $(this).data('row'), confirmed: Number($(this).prop('checked')) } );
 	});
-	
+	if ($('#groups_checkbox').length>0){
+		var gr_chk = '';
+		$.each(groups.rows, function( index, value ) {
+			gr_chk = gr_chk+'<label><input id="grch'+value.id+'" class="grch" name="groups[]" type="checkbox" value="'+value.id+'"> '+value.name+'</label><br>';
+		});
+		$('#groups_checkbox').html(gr_chk);	
+	}
 });
+
+function get_groups (val, row) 
+{	
+	if (!val) return;
+	var gs = val.split(',');
+	var gs_names = [];
+	gs.forEach(function(item, i, gs) {
+		var result = groups.rows.filter(function(el){
+			return el.id.indexOf(item) > -1;//fieldName - поле по которому нужно фильтровать
+		});
+		if (result[0]) gs_names.push(result[0].name);
+	});				
+	
+	return gs_names.join(', ');
+}
 function valid (val, row) 
 {		
 	if (val==0) return '<span class="label label-default">нет данных</span>';	
@@ -53,8 +74,7 @@ function get_method (val, row)
 function save_tl()
 {		
 	if ($('.ckeditor').length) var txt = tinymce.get('editor').getContent();
-	else var txt = cm.getValue();	
-		
+	else var txt = cm.getValue();		
 	$('#editor').val(txt);
 	$.ajax({		
 		method: 'post',
@@ -116,6 +136,15 @@ function edit_str()
 	if (row){		
 		$('#dlg').dialog('open').dialog('setTitle','Редактирование');
 		$('#ff').form('load',row);
+		if(row.groups!='undefined'){		
+			$('.grch').removeAttr("checked");
+			var gsc = row.groups;
+			var gs = gsc.split(',');
+			$.each(gs, function( index, value ) {
+				console.log('#grch'+value);
+				$('#grch'+value).prop('checked', true);
+			});
+		}
 		url = moduleurl+'do=update';
 	}
 }               
