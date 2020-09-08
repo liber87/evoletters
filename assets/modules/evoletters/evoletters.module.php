@@ -22,7 +22,7 @@
 	
 	$data = array (
 	'moduleurl'=>$moduleurl,
-	'edit_button'=>'',	
+	'edit_button'=>'',	 
 	'manager_theme'=>$modx->config['manager_theme'],
 	'session'=>$_SESSION,
 	'get'=>$_GET,
@@ -32,6 +32,7 @@
 	'templates'=>$el->getNamesTemlates(),
 	'templates_json'=>$el->getNamesTemlatesJSON(),
 	'methods'=>$el->getNamesMethods(),
+	'groups'=>$el->getData('el_groups'),
 	'rte'=>$el->rte(''),
 	'CM_URL'=>$el->CM()
 	);
@@ -39,7 +40,7 @@
 	else if ($tab=='edit_letter') $data['edit_button'] = '<h2 class="tab selected"><span>Редактирование письма</span></h2>';		
 	
 	
-	$tpls = array('home','templates','distribution','letters','edit_template','edit_letter','methods');
+	$tpls = array('home','templates','distribution','letters','edit_template','edit_letter','methods','groups');
 	if (in_array($tab,$tpls)) $outTpl = $el->getTemplate($tab,$data);		
 	
 	
